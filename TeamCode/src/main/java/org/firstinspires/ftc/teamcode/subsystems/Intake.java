@@ -14,7 +14,7 @@ public class Intake {
         INTAKE, STOP, REVERSE
     }
     private IntakeState state = IntakeState.STOP;
-    private final DcMotorEx intake;
+    public final DcMotorEx intake;
 
     private final RGB ballLight;
 
