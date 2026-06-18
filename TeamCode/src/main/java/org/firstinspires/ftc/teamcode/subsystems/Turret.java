@@ -16,8 +16,8 @@ public class Turret {
     public static double kp = 0.03;
     public static double kd = 0.0005;
 
-    public static final double GOAL_X = -72.0;
-    public static final double GOAL_Y = -72.0;
+    public static final double GOAL_X = -72.0; // tune offset
+    public static final double GOAL_Y = -72.0; // tune offset
     private static final double MIN_ANGLE = -112;
     private static final double MAX_ANGLE = 132;
 
@@ -99,6 +99,7 @@ public class Turret {
 
         wasPressed = pressed;
     }
+
     public double autoAim(double robotX, double robotY, double robotHeadingDeg) {
         double dx = GOAL_X - robotX;
         double dy = GOAL_Y - robotY;

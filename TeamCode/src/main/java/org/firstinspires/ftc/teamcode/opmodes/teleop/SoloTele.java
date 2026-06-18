@@ -25,11 +25,19 @@ public class SoloTele extends LinearOpMode {
     public static final double START_X = 0;
     public static final double START_Y = 0;
     public static final double START_HEADING = 0;
+    private void resetPinpointPose() {
+        pinpoint.setPosition(
+                new Pose2D(
+                        DistanceUnit.INCH, START_X, START_Y, AngleUnit.DEGREES, START_HEADING
+                )
+        );
+    }
+
     private boolean autoTrack = false;
     private boolean lastLeftBumper = false;
-    boolean slowMode = false;
-    boolean xWasPressed = false;
-    boolean yWasPressed = false;
+    private boolean slowMode = false;
+    private boolean xWasPressed = false;
+    private boolean yWasPressed = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,16 +48,18 @@ public class SoloTele extends LinearOpMode {
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         pinpoint.setOffsets(139.7, -63.5, DistanceUnit.MM);
-        pinpoint.setEncoderResolution(com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         pinpoint.setEncoderDirections(
                 GoBildaPinpointDriver.EncoderDirection.FORWARD,
                 GoBildaPinpointDriver.EncoderDirection.FORWARD
         );
+        // resets current position to 0,0,0 and recalibrates the internal IMU
         pinpoint.resetPosAndIMU();
 
         sleep(400);
         waitForStart();
+
         // put after start because robot may still be moving during setup
         // setting start position is one-time so not in loop
         pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, START_X, START_Y, AngleUnit.DEGREES, START_HEADING));
@@ -98,11 +108,10 @@ public class SoloTele extends LinearOpMode {
                 turret.setTargetAngle(aimAngle);
             }
             turret.update();
+
             // Relocalization
             if (gamepad1.y && !yWasPressed) {
-                pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, START_X, START_Y, AngleUnit.DEGREES, START_HEADING
-                ));
-
+                resetPinpointPose();
                 yWasPressed = true;
             } else if (!gamepad1.y) {
                 yWasPressed = false;
