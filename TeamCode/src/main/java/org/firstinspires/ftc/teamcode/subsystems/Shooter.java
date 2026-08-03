@@ -59,7 +59,7 @@ public class Shooter {
         flywheelMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheelMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        setPIDF(33.2, 13.1);
+        setPIDF(40, 12.64);
         gate.setPosition(gateClosed);
         stateLight = new RGB(rgbServo);
     }

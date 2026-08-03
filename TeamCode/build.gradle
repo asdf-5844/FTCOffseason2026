@@ -56,8 +56,10 @@ dependencies {
 
     // sloth
     implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
-
-    // solvers
+    // ftc dashboard
+    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.5.1")
+    
+    // solvers lib
     // implementation "org.solverslib:core:0.3.4" // core
     // implementation "org.solverslib:pedroPathing:0.3.4" // pedroPathing
 }

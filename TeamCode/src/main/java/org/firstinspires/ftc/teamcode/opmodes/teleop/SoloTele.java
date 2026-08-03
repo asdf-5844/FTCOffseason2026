@@ -47,7 +47,7 @@ public class SoloTele extends LinearOpMode {
         turret = new Turret(hardwareMap);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        pinpoint.setOffsets(139.7, -63.5, DistanceUnit.MM);
+        pinpoint.setOffsets(127.52, -68.1, DistanceUnit.MM);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         pinpoint.setEncoderDirections(

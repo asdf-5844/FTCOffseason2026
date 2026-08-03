@@ -31,8 +31,8 @@ public class ShooterHoodTune extends LinearOpMode {
     private double targetVelocity = 1000; // ticks per second
     private double hoodPosition = 0.33;
 
-    private static final double P = 33.2;
-    private static final double F = 13.1;
+    private static final double P = 40;
+    private static final double F = 12.64;
 
     @Override
     public void runOpMode() {
@@ -44,7 +44,7 @@ public class ShooterHoodTune extends LinearOpMode {
         hood.setDirection(Servo.Direction.REVERSE);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        pinpoint.setOffsets(139.7, -63.5, DistanceUnit.MM);
+        pinpoint.setOffsets(127.52, -68.1, DistanceUnit.MM);
         pinpoint.setEncoderResolution(com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         pinpoint.setEncoderDirections(

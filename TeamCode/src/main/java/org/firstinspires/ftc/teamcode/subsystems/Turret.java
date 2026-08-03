@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+@Config
 public class Turret {
     private final DcMotorEx turret;
     private final TouchSensor turretLimitSwitch; // Magnetic Limit Switch
@@ -13,8 +15,12 @@ public class Turret {
     private double targetAngle = 0;
 
     // Tune PID!!!
-    public static double kp = 0.03;
-    public static double kd = 0.0005;
+    public static double kP = 0.018;
+    public static double kD = 0.0008;
+    public static double kS = 0.03; // friction
+    public static double DEADBAND_DEG = 1.2;
+    private double previousError = 0;
+    private long previousTimeNanos = 0;
 
     public static final double GOAL_X = -72.0; // tune offset
     public static final double GOAL_Y = -72.0; // tune offset
@@ -41,7 +47,7 @@ public class Turret {
     }
 
     public double getError() {
-        return targetAngle - getCurrentAngle();
+        return normalizeDegrees(targetAngle - getCurrentAngle());
     }
 
     public void setTargetAngle(double angle) {
@@ -61,28 +67,55 @@ public class Turret {
     }
 
     public void update() {
-        // compare target vs current
-        // set motor power
-        double currentAngle = getCurrentAngle();
-        double error = normalizeDegrees(targetAngle - currentAngle);
+        double error = getError();
 
-        double power = 0;
-        power += error * kp;
+        long currentTimeNanos = System.nanoTime();
+        // on the first loop, there is no previous time or error yet
+        if (previousTimeNanos == 0) {
+            previousTimeNanos = currentTimeNanos;
+            previousError = error;
+            turret.setPower(0);
+            return;
+        }
 
+        // there are one billion nanoseconds in one second
+        double deltaTime =
+                (currentTimeNanos - previousTimeNanos)
+                        / 1_000_000_000.0;
 
-        if (Math.abs(error) < 1) {
+        if (deltaTime <= 0) {
+            return;
+        }
+
+        double proportional = kP * error;
+
+        double derivative =
+                (error - previousError) / deltaTime;
+        double derivativePower = kD * derivative;
+
+        // P + D
+        double power = proportional + derivativePower;
+
+        if (Math.abs(error) > DEADBAND_DEG) {
+            // Small constant push to overcome friction
+            power += Math.signum(error) * kS;
+        } else {
             power = 0;
         }
 
         // clamp, speed limits
-        if (power > 0.6) {
-            power = 0.6;
+        if (power > 0.8) {
+            power = 0.8;
         }
-        if (power < -0.6) {
-            power = -0.6;
+        if (power < -0.8) {
+            power = -0.8;
         }
 
         turret.setPower(power);
+
+        // Save new values for the next loop.
+        previousError = error;
+        previousTimeNanos = currentTimeNanos;
     }
 
     public boolean isHomePressed() {
@@ -95,6 +128,10 @@ public class Turret {
         if (pressed && !wasPressed) {
             turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            targetAngle = 0;
+            previousError = 0;
+            previousTimeNanos = 0;
         }
 
         wasPressed = pressed;

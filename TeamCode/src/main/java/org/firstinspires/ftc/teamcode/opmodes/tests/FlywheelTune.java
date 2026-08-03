@@ -12,8 +12,8 @@ public class FlywheelTune extends OpMode{
     public DcMotorEx flywheelMotorLeft;
     public DcMotorEx flywheelMotorRight;
 
-    public double highVelocity = 1500;
-    public double lowVelocity = 900;
+    public double highVelocity = 2000;
+    public double lowVelocity = 1000;
 
     double curTargetVelocity = highVelocity;
 
