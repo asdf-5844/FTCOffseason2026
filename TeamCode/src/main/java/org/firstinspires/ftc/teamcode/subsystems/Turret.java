@@ -17,7 +17,7 @@ public class Turret {
     // Tune PID!!!
     public static double kP = 0.018;
     public static double kD = 0.0008;
-    public static double kS = 0.03; // friction
+    public static double kS = 0.025; // friction
     public static double DEADBAND_DEG = 1.2;
     private double previousError = 0;
     private long previousTimeNanos = 0;
