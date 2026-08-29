@@ -171,15 +171,15 @@ public class Shooter {
     }
 
     public double getFlywheelSpeed(double distance) {
-        return 7.24201 * distance + 922.48402;
+        return 5.77563 * distance + 1016.95948;
 
     }
 
     public double getHoodAngle(double distance) {
-        return 0.0000014368 * distance * distance * distance
-                - 0.000362971 * distance * distance
-                + 0.0309257 * distance
-                - 0.459372;
+        return 0.000000505355  * distance * distance * distance
+                - 0.000154644  * distance * distance
+                + 0.0161674  * distance
+                - 0.127576;
     }
 
     public void aimForDistance(double distance) {
@@ -189,8 +189,8 @@ public class Shooter {
 
         // clamp between 1200 and 2000
         velocity = Math.max(1200, Math.min(2000, velocity));
-        // clamp between 0.33 and 0.44
-        hoodPos = Math.max(0.33, Math.min(0.44, hoodPos));
+        // clamp between 0.33 and 0.47
+        hoodPos = Math.max(0.33, Math.min(0.47, hoodPos));
 
         setTargetVelocity(velocity);
         hoodServo.setPosition(hoodPos);

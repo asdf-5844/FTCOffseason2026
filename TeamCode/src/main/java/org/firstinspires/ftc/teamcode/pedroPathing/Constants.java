@@ -18,7 +18,7 @@ public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12.92738)
             .headingPIDFCoefficients(new PIDFCoefficients(1.4, 0, 0.04, 0.025))
-            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.1, 0.03615762, 9.52900356))
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.1, 0.0965738, 0.000514852)) // 0.000514852
             .centripetalScaling(0)
             ;
 

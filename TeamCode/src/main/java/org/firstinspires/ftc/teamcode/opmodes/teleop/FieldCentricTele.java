@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.util.GlobalConstants;
+
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
@@ -22,13 +24,16 @@ public class FieldCentricTele extends LinearOpMode {
     private Turret turret;
     private GoBildaPinpointDriver pinpoint;
 
-    public static final double START_X = 0;
-    public static final double START_Y = 0;
-    public static final double START_HEADING = 0;
+    public static final double START_X = GlobalConstants.TELEOP_START_X;
+    public static final double START_Y = GlobalConstants.TELEOP_START_Y;
+    public static final double START_HEADING = GlobalConstants.TELEOP_START_HEADING;
+    public static final double RELOC_X = GlobalConstants.RELOC_X;
+    public static final double RELOC_Y = GlobalConstants.RELOC_Y;
+    public static final double RELOC_HEADING = GlobalConstants.RELOC_HEADING;
     private void resetPinpointPose() {
         pinpoint.setPosition(
                 new Pose2D(
-                        DistanceUnit.INCH, START_X, START_Y, AngleUnit.DEGREES, START_HEADING
+                        DistanceUnit.INCH, RELOC_X, RELOC_Y, AngleUnit.DEGREES, RELOC_HEADING
                 )
         );
     }
@@ -47,7 +52,7 @@ public class FieldCentricTele extends LinearOpMode {
         turret = new Turret(hardwareMap);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        pinpoint.setOffsets(127.52, -68.1, DistanceUnit.MM);
+        pinpoint.setOffsets(GlobalConstants.PINPOINT_X_OFFSET_MM, GlobalConstants.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         pinpoint.setEncoderDirections(

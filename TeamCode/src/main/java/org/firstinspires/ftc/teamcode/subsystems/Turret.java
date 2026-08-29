@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.util.GlobalConstants;
+
 @Config
 public class Turret {
     private final DcMotorEx turret;
@@ -22,8 +24,8 @@ public class Turret {
     private double previousError = 0;
     private long previousTimeNanos = 0;
 
-    public static final double GOAL_X = -72.0; // tune offset
-    public static final double GOAL_Y = -72.0; // tune offset
+    public static final double GOAL_X = GlobalConstants.GOAL_X;
+    public static final double GOAL_Y = GlobalConstants.GOAL_Y;
     private static final double MIN_ANGLE = -112;
     private static final double MAX_ANGLE = 132;
 
