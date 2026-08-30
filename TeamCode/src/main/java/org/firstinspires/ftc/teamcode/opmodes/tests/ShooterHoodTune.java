@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.tests;
 import static org.firstinspires.ftc.teamcode.opmodes.teleop.MainTele.START_X;
 import static org.firstinspires.ftc.teamcode.opmodes.teleop.MainTele.START_Y;
 import static org.firstinspires.ftc.teamcode.opmodes.teleop.MainTele.START_HEADING;
+import org.firstinspires.ftc.teamcode.util.GlobalConstants;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -44,7 +45,7 @@ public class ShooterHoodTune extends LinearOpMode {
         hood.setDirection(Servo.Direction.REVERSE);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        pinpoint.setOffsets(127.52, -68.1, DistanceUnit.MM);
+        pinpoint.setOffsets(GlobalConstants.PINPOINT_X_OFFSET_MM, GlobalConstants.PINPOINT_Y_OFFSET_MM, DistanceUnit.MM);
         pinpoint.setEncoderResolution(com.qualcomm.hardware.gobilda.GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         pinpoint.setEncoderDirections(

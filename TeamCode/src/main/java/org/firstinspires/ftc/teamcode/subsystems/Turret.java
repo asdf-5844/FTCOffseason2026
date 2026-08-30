@@ -26,8 +26,8 @@ public class Turret {
 
     public static final double GOAL_X = GlobalConstants.GOAL_X;
     public static final double GOAL_Y = GlobalConstants.GOAL_Y;
-    private static final double MIN_ANGLE = -112;
-    private static final double MAX_ANGLE = 132;
+    private static final double MIN_ANGLE = -108;
+    private static final double MAX_ANGLE = 130;
 
     public Turret(HardwareMap hardwareMap) {
         turret = hardwareMap.get(DcMotorEx.class, "turret");
@@ -49,7 +49,7 @@ public class Turret {
     }
 
     public double getError() {
-        return normalizeDegrees(targetAngle - getCurrentAngle());
+        return targetAngle - getCurrentAngle(); // fixed!
     }
 
     public void setTargetAngle(double angle) {
@@ -103,6 +103,7 @@ public class Turret {
             power += Math.signum(error) * kS;
         } else {
             power = 0;
+
         }
 
         // clamp, speed limits

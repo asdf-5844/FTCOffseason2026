@@ -160,9 +160,9 @@ public class MainTele extends LinearOpMode {
             // telemetry.addData("Left Velocity TPS", shooter.getLeftVelocity());
             // telemetry.addData("Right Velocity TPS", shooter.getRightVelocity());
             telemetry.addData("Target Velocity TPS", shooter.getTargetVelocity());
-            telemetry.addData("Average Velocity TPS", "%.2f", shooter.getAverageVelocity());
+            telemetry.addData("Current Velocity TPS", "%.2f", shooter.getLeftVelocity());
             telemetry.addData("Velocity Error", "%.2f",
-                    shooter.getTargetVelocity() - shooter.getAverageVelocity());
+                    shooter.getTargetVelocity() - shooter.getLeftVelocity());
             telemetry.addData("Distance", "%.2f", distance);
             telemetry.addData("Calculated Velocity",
                     shooter.getFlywheelSpeed(distance));

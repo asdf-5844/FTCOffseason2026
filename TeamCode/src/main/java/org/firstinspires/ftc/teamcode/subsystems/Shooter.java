@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 public class Shooter {
     public enum ShooterState {
@@ -30,8 +31,9 @@ public class Shooter {
     private double feedTime = 1.0;
     private double gateOpenDelay = 0.25;
 
-    private double P = 0;
-    private double F = 0;
+    private double kP = 0.0002;
+    private double kS = 0.01;
+    private double kV = 0.00036;
 
     public Shooter(HardwareMap hardwareMap) {
         flywheelMotorLeft = hardwareMap.get(DcMotorEx.class, "flywheelLeft");
@@ -45,33 +47,29 @@ public class Shooter {
         flywheelMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheelMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        MotorConfigurationType leftType = flywheelMotorLeft.getMotorType().clone();
-        leftType.setAchieveableMaxRPMFraction(1.0);
-        flywheelMotorLeft.setMotorType(leftType);
+        flywheelMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flywheelMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flywheelMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheelMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        MotorConfigurationType rightType = flywheelMotorRight.getMotorType().clone();
-        rightType.setAchieveableMaxRPMFraction(1.0);
-        flywheelMotorRight.setMotorType(rightType);
-
-        flywheelMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        flywheelMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        flywheelMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        flywheelMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        setPIDF(40, 12.64);
         gate.setPosition(gateClosed);
         stateLight = new RGB(rgbServo);
     }
 
-    public void setPIDF(double p, double f) {
-        P = p;
-        F = f;
+    private void updateFlywheelController() {
+        double currentVelocity = Math.abs(flywheelMotorLeft.getVelocity());
+        double error = targetVelocity - currentVelocity;
 
-        PIDFCoefficients pidf = new PIDFCoefficients(P, 0, 0, F);
-        flywheelMotorLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
-        flywheelMotorRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
+        double output = kS * Math.signum(targetVelocity)
+                + kV * targetVelocity
+                + kP * error;
+
+        output = Range.clip(output, 0.0, 1.0);
+
+        flywheelMotorLeft.setPower(output);
+        flywheelMotorRight.setPower(output);
     }
+
 
     public void setTargetVelocity(double targetVelocity) {
         this.targetVelocity = targetVelocity;
@@ -147,19 +145,11 @@ public class Shooter {
     }
 
     public boolean atSpeed() {
-        return Math.abs(targetVelocity - getAverageVelocity()) <= velocityTolerance;
+        return Math.abs(targetVelocity - getLeftVelocity()) <= velocityTolerance;
     }
 
     public double getLeftVelocity() {
         return flywheelMotorLeft.getVelocity();
-    }
-
-    public double getRightVelocity() {
-        return flywheelMotorRight.getVelocity();
-    }
-
-    public double getAverageVelocity() {
-        return (Math.abs(getLeftVelocity()) + Math.abs(getRightVelocity())) / 2.0;
     }
 
     public double getTargetVelocity() {
