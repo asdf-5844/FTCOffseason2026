@@ -4,9 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -31,7 +29,7 @@ public class Shooter {
     private double feedTime = 1.0;
     private double gateOpenDelay = 0.25;
 
-    private double kP = 0.0002;
+    private double kP = 0.0008;
     private double kS = 0.01;
     private double kV = 0.00036;
 
@@ -99,8 +97,7 @@ public class Shooter {
                 break;
 
             case SPINNING_UP:
-                flywheelMotorLeft.setVelocity(targetVelocity);
-                flywheelMotorRight.setVelocity(targetVelocity);
+                updateFlywheelController();
                 gate.setPosition(gateClosed);
                 stateLight.azure();
 
@@ -110,8 +107,7 @@ public class Shooter {
                 break;
 
             case READY:
-                flywheelMotorLeft.setVelocity(targetVelocity);
-                flywheelMotorRight.setVelocity(targetVelocity);
+                updateFlywheelController();
                 gate.setPosition(gateClosed);
                 stateLight.green();
 
@@ -122,8 +118,7 @@ public class Shooter {
                 break;
 
             case FEEDING:
-                flywheelMotorLeft.setVelocity(targetVelocity);
-                flywheelMotorRight.setVelocity(targetVelocity);
+                updateFlywheelController();
                 gate.setPosition(gateOpen);
                 stateLight.orange();
                 
@@ -149,7 +144,7 @@ public class Shooter {
     }
 
     public double getLeftVelocity() {
-        return flywheelMotorLeft.getVelocity();
+        return Math.abs(flywheelMotorLeft.getVelocity());
     }
 
     public double getTargetVelocity() {
