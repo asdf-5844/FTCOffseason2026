@@ -32,7 +32,7 @@ public class TurretTune extends LinearOpMode {
             }
 
             // turret.resetEncoderWhenHomePressed();
-            turret.update();
+            // turret.update();
 
             telemetry.addData("Error", turret.getError());
             telemetry.addData("Angle", turret.getCurrentAngle());

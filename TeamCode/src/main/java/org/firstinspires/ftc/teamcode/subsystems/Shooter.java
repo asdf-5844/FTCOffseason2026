@@ -156,7 +156,7 @@ public class Shooter {
     }
 
     public double getFlywheelSpeed(double distance) {
-        return 5.77563 * distance + 1016.95948;
+        return 7.07817 * distance + 928.14484;
 
     }
 
@@ -178,6 +178,6 @@ public class Shooter {
         hoodPos = Math.max(0.33, Math.min(0.47, hoodPos));
 
         setTargetVelocity(velocity);
-        hoodServo.setPosition(hoodPos);
-    }
+                hoodServo.setPosition(hoodPos);
+            }
 }
